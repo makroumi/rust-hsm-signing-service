@@ -1,0 +1,6 @@
+bind = "0.0.0.0:8080"
+max_body_bytes = 1048576
+request_timeout_ms = 10000
+
+[backend]
+kind = "mock"

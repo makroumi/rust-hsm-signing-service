@@ -1,0 +1,50 @@
+name: CI
+on:
+  push: { branches: [main] }
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with: { components: "rustfmt, clippy" }
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --workspace --all-targets --all-features -- -D warnings
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Install SoftHSM2 + OpenSC
+        run: sudo apt-get update && sudo apt-get install -y softhsm2 opensc
+      - name: Init SoftHSM
+        id: softhsm
+        run: |
+          set -eo pipefail
+          eval "$(./scripts/init-softhsm.sh)"
+          ./scripts/provision-keys.sh
+          echo "PKCS11_MODULE=$PKCS11_MODULE" >> $GITHUB_ENV
+          echo "PKCS11_SLOT=$PKCS11_SLOT"     >> $GITHUB_ENV
+          echo "PKCS11_PIN=$PKCS11_PIN"       >> $GITHUB_ENV
+          echo "HSM_PIN=$PKCS11_PIN"          >> $GITHUB_ENV
+          echo "SOFTHSM2_CONF=$SOFTHSM2_CONF" >> $GITHUB_ENV
+      - run: cargo check --workspace --all-targets
+      - run: cargo test --workspace --all-targets
+
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: taiki-e/install-action@v2
+        with: { tool: cargo-deny }
+      - run: cargo deny check

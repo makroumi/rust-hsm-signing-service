@@ -1,0 +1,24 @@
+[package]
+name = "hsm-pkcs11"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "PKCS#11-backed HSM implementation (SoftHSM2 compatible)"
+
+[dependencies]
+hsm-core = { path = "../hsm-core" }
+async-trait.workspace = true
+tokio = { workspace = true, features = ["sync", "rt", "time", "macros"] }
+tracing.workspace = true
+cryptoki.workspace = true
+zeroize.workspace = true
+parking_lot = "0.12"
+rand.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["macros", "rt-multi-thread", "test-util"] }
+tempfile.workspace = true
+p256 = { workspace = true, features = ["ecdsa"] }
+sha2.workspace = true
+uuid = { workspace = true }

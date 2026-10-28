@@ -1,0 +1,18 @@
+[package]
+name = "hsm-core"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "HSM-agnostic abstraction traits and types for signing/encryption"
+
+[dependencies]
+async-trait.workspace = true
+thiserror.workspace = true
+serde = { workspace = true }
+zeroize.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["macros", "rt"] }
+serde_json.workspace = true

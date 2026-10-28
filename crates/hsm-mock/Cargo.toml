@@ -1,0 +1,21 @@
+[package]
+name = "hsm-mock"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Pure-Rust in-memory HSM backend for tests and local development"
+
+[dependencies]
+hsm-core = { path = "../hsm-core" }
+async-trait.workspace = true
+tokio = { workspace = true, features = ["sync", "rt"] }
+tracing.workspace = true
+p256 = { workspace = true, features = ["ecdsa", "pem"] }
+sha2.workspace = true
+rand.workspace = true
+zeroize.workspace = true
+aes-gcm = "0.10"
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }

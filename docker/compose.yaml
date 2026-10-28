@@ -1,0 +1,11 @@
+services:
+  signing-service:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: makroumi/rust-hsm-signing-service:latest
+    ports:
+      - "8080:8080"
+      - "9100:9100"
+    environment:
+      RUST_LOG: info,signing_service=debug

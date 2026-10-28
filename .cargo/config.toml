@@ -1,0 +1,10 @@
+[net]
+git-fetch-with-cli = true
+retry = 10
+
+[registries.crates-io]
+protocol = "sparse"
+
+[build]
+# Keep incremental for dev; CI overrides to false.
+incremental = true
