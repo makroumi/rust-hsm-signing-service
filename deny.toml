@@ -6,14 +6,14 @@
 db-path = "~/.cargo/advisory-db"
 db-urls = ["https://github.com/rustsec/advisory-db"]
 ignore = [
-    # crypto-bigint 0.5.x — no backported patch. p256 0.13 → elliptic-curve
+    # crypto-bigint 0.5.x - no backported patch. p256 0.13 → elliptic-curve
     # 0.13 → crypto-bigint 0.5.  Upgrade path: p256 0.14 (not yet released).
     # Mitigation: private-key arithmetic runs inside the HSM, not in
     # software big-int code.
     { id = "RUSTSEC-2026-0387", reason = "crypto-bigint 0.5 unpatched; p256 0.13 pins it. HSM-backed keys mitigate." },
 
     # cryptoki 0.7 → 0.12 is a breaking API migration.  The OOB read
-    # requires a crafted CKA_ALLOWED_MECHANISMS from HSM firmware — not
+    # requires a crafted CKA_ALLOWED_MECHANISMS from HSM firmware - not
     # attacker-controllable in our threat model.
     { id = "RUSTSEC-2026-0286", reason = "cryptoki 0.7→0.12 breaking migration pending. OOB requires malicious HSM firmware." },
 
@@ -51,7 +51,7 @@ license-files = [
 [bans]
 multiple-versions = "warn"
 wildcards = "deny"
-# windows-sys 0.52 (ring → rustls) vs 0.61 (tokio, clap) — transitive,
+# windows-sys 0.52 (ring → rustls) vs 0.61 (tokio, clap) - transitive,
 # unresolvable without upstream coordination.
 skip = [
     { name = "windows-sys" },

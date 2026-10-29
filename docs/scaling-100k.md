@@ -11,8 +11,8 @@ math and the architecture that reaches 100k certs/sec.
 
 A certificate signing operation is dominated by a single ECDSA (or
 future ML-DSA) signature over the TBS (to-be-signed) certificate body.
-Everything else — CSR parsing, template filling, base64 encoding, JSON
-serialization — is noise by comparison:
+Everything else - CSR parsing, template filling, base64 encoding, JSON
+serialization - is noise by comparison:
 
 | Component | Latency | Notes |
 |-----------|---------|-------|
@@ -23,7 +23,7 @@ serialization — is noise by comparison:
 | **Total per cert** | **~1–10 ms** | **>99% is the HSM call** |
 
 The service-side overhead is ~10 µs. At 100k certs/sec that's 1 second
-of CPU per second — a single core. The bottleneck is the HSM, full stop.
+of CPU per second - a single core. The bottleneck is the HSM, full stop.
 
 ## Sizing the HSM tier
 

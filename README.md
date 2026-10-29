@@ -35,7 +35,7 @@ its design follows directly from NHIG's requirements:
 * **Post-quantum-ready by construction.** Signature algorithms are a
   closed, validated enum mapped to PKCS#11 mechanisms at a single seam
   in the backend. When HSM firmware ships ML-DSA / SLH-DSA, adoption is
-  a mechanism-mapping change — not an architecture change.
+  a mechanism-mapping change - not an architecture change.
 
 ## Highlights
 
@@ -87,7 +87,7 @@ math and architecture behind 100k certs/sec.
 ## Performance (measured, not estimated)
 
 Micro-benchmarks via Criterion (`cargo bench -p hsm-mock`, release mode,
-software mock — real HSM latency is dominated by the PKCS#11 round-trip):
+software mock - real HSM latency is dominated by the PKCS#11 round-trip):
 
 | Operation | Payload | Median | Throughput |
 |-----------|---------|--------|------------|
@@ -334,7 +334,7 @@ cargo run --release -p load-test -- \
 6. **Cost model**
 
    - HSM ops: ~100 intermediate signings/day (one per signer per epoch).
-   - That's ~$4k/mo for a 3-region CloudHSM footprint — fixed, not per-leaf.
+   - That's ~$4k/mo for a 3-region CloudHSM footprint - fixed, not per-leaf.
    - Software signers: commodity compute, auto-scale on QPS.
 
 ### Trade-offs summary

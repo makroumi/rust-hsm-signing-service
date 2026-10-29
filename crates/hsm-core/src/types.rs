@@ -46,7 +46,7 @@ impl KeyId {
 
 /// Deserializing runs the same validation as [`KeyId::new`], so a
 /// `KeyId` obtained from any source (HTTP, config, IPC) always satisfies
-/// the invariant — serde cannot be used to bypass validation.
+/// the invariant - serde cannot be used to bypass validation.
 impl<'de> serde::Deserialize<'de> for KeyId {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where

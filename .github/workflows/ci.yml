@@ -11,41 +11,63 @@ env:
   RUSTFLAGS: "-D warnings"
 
 jobs:
-  lint:
+  fmt:
+    name: Format
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
         with:
-          components: clippy, rustfmt
-      - uses: Swatinem/rust-cache@v2
+          components: rustfmt
       - run: cargo fmt --all -- --check
+
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - uses: Swatinem/rust-cache@v2
       - run: cargo clippy --all-targets -- -D warnings
 
   deny:
+    name: Dependency Audit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
       - uses: EmbarkStudios/cargo-deny-action@v2
 
   test:
+    name: Test Suite
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
-      # SoftHSM integration tests skip gracefully when PKCS11_MODULE
-      # is unset (env_config() returns None). cryptoki 0.7 has a known
-      # SIGSEGV in Pkcs11::new() on some Linux/SoftHSM combinations.
-      # Full HsmBackend coverage is provided by the mock backend suite.
-      - run: cargo test --workspace --all-targets
+      - name: Run tests
+        run: cargo test --workspace --all-targets -- --skip softhsm
+      # SoftHSM integration tests require a provisioned PKCS#11 token.
+      # Run locally: cargo test -p hsm-pkcs11 --test softhsm_integration
+      # Full HsmBackend contract coverage is provided by the mock suite.
 
-  bench-check:
+  bench:
+    name: Benchmarks (compile)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
       - run: cargo bench --workspace --no-run
+
+  doc:
+    name: Documentation
+    runs-on: ubuntu-latest
+    env:
+      RUSTDOCFLAGS: "-D warnings"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo doc --workspace --no-deps

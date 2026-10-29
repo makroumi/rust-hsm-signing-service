@@ -3,12 +3,12 @@
 //! These tests prove production-critical behaviors that most take-homes
 //! only *claim*:
 //!
-//! * **408 on slow backend** — uses `start_paused` so a 60-second backend
+//! * **408 on slow backend** - uses `start_paused` so a 60-second backend
 //!   delay and a 100-millisecond timeout resolve in ~0 ms wall time with
 //!   zero flakiness.
-//! * **503 on pool exhaustion** — a backend that returns `PoolExhausted`
+//! * **503 on pool exhaustion** - a backend that returns `PoolExhausted`
 //!   maps to 503, proving the backpressure path end-to-end.
-//! * **No cross-talk under load** — 100 concurrent requests with unique
+//! * **No cross-talk under load** - 100 concurrent requests with unique
 //!   payloads all produce independently verifiable signatures.
 
 use async_trait::async_trait;
@@ -146,7 +146,7 @@ fn sign_req(payload_b64: &str) -> Request<Body> {
 ///
 /// `start_paused` makes the mock clock auto-advance when all tasks are
 /// blocked on timers, so this test completes in ~0 ms wall time and is
-/// completely deterministic — no `thread::sleep`, no flakiness.
+/// completely deterministic - no `thread::sleep`, no flakiness.
 #[tokio::test(start_paused = true)]
 async fn slow_backend_triggers_408_timeout() {
     // Provision the key on the current (paused-clock) runtime *before*
@@ -173,7 +173,7 @@ async fn slow_backend_triggers_408_timeout() {
 }
 
 /// When the HSM backend signals pool exhaustion, the HTTP layer must
-/// return 503 SERVICE_UNAVAILABLE — not 500, not 429.
+/// return 503 SERVICE_UNAVAILABLE - not 500, not 429.
 #[tokio::test]
 async fn pool_exhaustion_returns_503() {
     let hsm = Arc::new(PoolExhaustedBackend) as Arc<dyn HsmBackend>;
@@ -193,7 +193,7 @@ async fn pool_exhaustion_returns_503() {
 }
 
 /// 100 concurrent requests with distinct payloads must all succeed and
-/// produce independently verifiable signatures — no cross-talk, no
+/// produce independently verifiable signatures - no cross-talk, no
 /// shared-state corruption.
 #[tokio::test]
 async fn concurrent_signs_all_verify() {

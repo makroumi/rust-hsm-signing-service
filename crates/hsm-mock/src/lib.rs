@@ -1,7 +1,7 @@
 //! # hsm-mock
 //!
 //! In-memory HSM backend used for unit/integration tests and local
-//! development. **Not for production** — private keys live in process
+//! development. **Not for production** - private keys live in process
 //! memory. The implementation is still carefully written:
 //!
 //! * [`p256::ecdsa::SigningKey`] already implements `ZeroizeOnDrop`

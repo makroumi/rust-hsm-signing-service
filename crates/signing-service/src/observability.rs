@@ -8,7 +8,7 @@ use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 
 /// Install a JSON tracing subscriber honoring `RUST_LOG`.
 ///
-/// Idempotent — safe to call multiple times from tests.
+/// Idempotent - safe to call multiple times from tests.
 pub fn init_tracing() {
     let filter = EnvFilter::try_from_default_env()
         .unwrap_or_else(|_| EnvFilter::new("info,signing_service=debug,hsm_pkcs11=debug"));

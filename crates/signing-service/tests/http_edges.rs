@@ -96,7 +96,7 @@ async fn unknown_route_returns_404() {
 #[tokio::test]
 async fn base64_missing_padding_rejected() {
     let app = make_app().await;
-    // "hello" = "aGVsbG8=" — drop the trailing '='.
+    // "hello" = "aGVsbG8=" - drop the trailing '='.
     let body = json!({
         "key_id": "k1",
         "algorithm": "ECDSA_P256_SHA256",
