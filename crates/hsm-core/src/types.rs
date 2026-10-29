@@ -197,7 +197,7 @@ mod tests {
             ciphertext_and_tag: vec![4, 5, 6],
         };
         ct.zeroize();
-        assert!(ct.iv.is_empty());
-        assert!(ct.ciphertext_and_tag.is_empty());
+        assert_eq!(ct.iv.len(), 0);
+        assert_eq!(ct.ciphertext_and_tag.len(), 0);
     }
 }
