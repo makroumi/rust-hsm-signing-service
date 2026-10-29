@@ -1,6 +1,6 @@
 //! HSM-backed signing service.
 //!
-//! See the binary [`main`] for wiring; the library exposes the
+//! See the binary `main` for wiring; the library exposes the
 //! building blocks so integration tests can spin up the full stack
 //! in-process.
 
