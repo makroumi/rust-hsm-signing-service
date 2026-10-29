@@ -18,6 +18,11 @@ zeroize.workspace = true
 aes-gcm = "0.10"
 
 [dev-dependencies]
+base64.workspace = true
 criterion = { version = "0.5.1", features = ["html_reports"] }
 proptest.workspace = true
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
+
+[[bench]]
+name = "crypto_ops"
+harness = false

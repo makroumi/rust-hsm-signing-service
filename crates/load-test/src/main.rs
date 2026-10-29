@@ -4,6 +4,11 @@
 //! histograms with a fixed number of concurrent "virtual users" each
 //! firing requests back-to-back for the configured duration.
 
+mod alloc_counter;
+
+#[global_allocator]
+static ALLOC: alloc_counter::CountingAllocator = alloc_counter::CountingAllocator;
+
 use anyhow::Result;
 use base64::{engine::general_purpose::STANDARD as B64, Engine};
 use clap::Parser;
@@ -59,8 +64,8 @@ async fn main() -> Result<()> {
     println!("# payload bytes : {}", args.payload_bytes);
     println!();
     println!(
-        "{:>7} {:>10} {:>10} {:>10} {:>10} {:>10} {:>10}",
-        "conc", "rps", "p50_ms", "p95_ms", "p99_ms", "max_ms", "err%"
+        "{:>7} {:>10} {:>10} {:>10} {:>10} {:>10} {:>10} {:>10} {:>12}",
+        "conc", "rps", "p50_ms", "p95_ms", "p99_ms", "max_ms", "err%", "allocs/op", "bytes/op"
     );
 
     let payload = B64.encode(vec![0xAB_u8; args.payload_bytes]);
@@ -100,8 +105,16 @@ async fn main() -> Result<()> {
         )
         .await?;
         println!(
-            "{:>7} {:>10.0} {:>10.2} {:>10.2} {:>10.2} {:>10.2} {:>10.2}",
-            conc, report.rps, report.p50, report.p95, report.p99, report.max, report.err_pct
+            "{:>7} {:>10.0} {:>10.2} {:>10.2} {:>10.2} {:>10.2} {:>10.2} {:>10.0} {:>12.0}",
+            conc,
+            report.rps,
+            report.p50,
+            report.p95,
+            report.p99,
+            report.max,
+            report.err_pct,
+            report.allocs_per_op,
+            report.bytes_per_op
         );
     }
     Ok(())
@@ -114,6 +127,8 @@ struct Report {
     p99: f64,
     max: f64,
     err_pct: f64,
+    allocs_per_op: f64,
+    bytes_per_op: f64,
 }
 
 async fn run_level(
@@ -129,6 +144,7 @@ async fn run_level(
     )?));
     let ok = Arc::new(AtomicU64::new(0));
     let err = Arc::new(AtomicU64::new(0));
+    alloc_counter::CountingAllocator::reset();
     let stop_at = Instant::now() + duration;
 
     let tasks: Vec<_> = (0..concurrency)
@@ -178,6 +194,17 @@ async fn run_level(
     } else {
         (err as f64 / total as f64) * 100.0
     };
+    let (allocs, bytes) = alloc_counter::CountingAllocator::snapshot();
+    let allocs_per_op = if total > 0 {
+        allocs as f64 / total as f64
+    } else {
+        0.0
+    };
+    let bytes_per_op = if total > 0 {
+        bytes as f64 / total as f64
+    } else {
+        0.0
+    };
     if warmup {
         tracing::info!(concurrency, rps, p99, "warmup done");
     }
@@ -188,5 +215,7 @@ async fn run_level(
         p99,
         max,
         err_pct,
+        allocs_per_op,
+        bytes_per_op,
     })
 }
