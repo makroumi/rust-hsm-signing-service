@@ -14,8 +14,13 @@ use std::{path::PathBuf, time::Duration};
 use zeroize::Zeroizing;
 
 fn env_config() -> Option<Pkcs11Config> {
+    let module = PathBuf::from(std::env::var("PKCS11_MODULE").ok()?);
+    if !module.exists() {
+        eprintln!("SKIP: PKCS11_MODULE {} not found", module.display());
+        return None;
+    }
     Some(Pkcs11Config {
-        module_path: PathBuf::from(std::env::var("PKCS11_MODULE").ok()?),
+        module_path: module,
         slot_id: std::env::var("PKCS11_SLOT").ok()?.parse().ok()?,
         user_pin: Zeroizing::new(std::env::var("PKCS11_PIN").ok()?),
         pool_size: 4,
