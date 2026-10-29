@@ -10,8 +10,7 @@ use zeroize::Zeroize;
 /// callers can address keys by human-friendly names (e.g.
 /// `arkion-intermediate-prod`) that remain stable across HSM reboots and
 /// re-generations.
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
-#[serde(transparent)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize)]
 pub struct KeyId(String);
 
 impl KeyId {
@@ -42,6 +41,19 @@ impl KeyId {
     #[must_use]
     pub fn as_str(&self) -> &str {
         &self.0
+    }
+}
+
+/// Deserializing runs the same validation as [`KeyId::new`], so a
+/// `KeyId` obtained from any source (HTTP, config, IPC) always satisfies
+/// the invariant — serde cannot be used to bypass validation.
+impl<'de> serde::Deserialize<'de> for KeyId {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let s = String::deserialize(deserializer)?;
+        Self::new(s).map_err(serde::de::Error::custom)
     }
 }
 

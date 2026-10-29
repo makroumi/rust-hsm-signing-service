@@ -38,7 +38,11 @@ pub fn router(state: AppState, max_body_bytes: usize, request_timeout: Duration)
         .layer(SetRequestIdLayer::x_request_id(MakeRequestUuid))
 }
 
+/// Strict wire contract: unknown fields are a client error rather than
+/// being silently ignored, so typos and version skew fail loudly at the
+/// API boundary instead of producing unintended semantics.
 #[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct SignRequest {
     pub key_id: String,
     pub algorithm: SignatureAlgorithm,

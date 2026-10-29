@@ -2,7 +2,9 @@
 
 [![CI](https://github.com/makroumi/rust-hsm-signing-service/actions/workflows/ci.yml/badge.svg)](https://github.com/makroumi/rust-hsm-signing-service/actions)
 [![Rust](https://img.shields.io/badge/rust-stable-orange.svg)](https://www.rust-lang.org)
-[![License](https://img.shields.io/badge/license-MIT%2FApache--2.0-blue.svg)](#license)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](#license)
+
+> **The signing core for Arkion's NHIG platform** — high-volume, short-lived credentials for non-human identities (AgentID, ArkionID), anchored in hardware roots of trust and built for a post-quantum (ML-DSA / SLH-DSA) future.
 
 A production-grade Rust service that performs cryptographic signing and
 authenticated encryption through a **PKCS#11-compatible HSM** (SoftHSM2 by
@@ -11,6 +13,27 @@ the HSM, flagged non-exportable, and are **never** materialised in the
 application process.
 
 ---
+
+## Where this fits at Arkion
+
+Arkion's Non-Human Identity Gateway (NHIG) replaces long-lived static
+credentials with short-lived, cryptographically attested identity for
+workloads, agents, and service accounts. This service is the signing core
+of that pipeline, and its design follows from NHIG's requirements:
+
+* **Short-lived credentials mean high-volume signing.** Rotating from
+  year-long keys to minutes-long certificates multiplies signing volume by
+  orders of magnitude. The bounded session pool, deadline-aware
+  acquisition, and 503 backpressure here exist for that regime: saturation
+  degrades predictably instead of falling over.
+* **Non-human identity demands hardware roots of trust.** Keys are
+  generated inside the HSM (`CKA_SENSITIVE=true`, `CKA_EXTRACTABLE=false`)
+  and never appear in application memory or logs, so a compromised service
+  host yields no long-lived key.
+* **Post-quantum-ready by construction.** Signature algorithms are a
+  closed, validated enum mapped to PKCS#11 mechanisms at one seam in the
+  backend. When HSM firmware ships ML-DSA / SLH-DSA, adoption is a
+  mechanism-mapping change, not an architecture change.
 
 ## Highlights
 
