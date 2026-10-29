@@ -7,7 +7,7 @@ license.workspace = true
 description = "PKCS#11-backed HSM implementation (SoftHSM2 compatible)"
 
 [dependencies]
-hsm-core = { path = "../hsm-core" }
+hsm-core = { version = "0.1.0", path = "../hsm-core" }
 async-trait.workspace = true
 tokio = { workspace = true, features = ["sync", "rt", "time", "macros"] }
 tracing.workspace = true

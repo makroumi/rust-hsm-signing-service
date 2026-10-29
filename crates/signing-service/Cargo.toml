@@ -11,9 +11,9 @@ name = "signing-service"
 path = "src/main.rs"
 
 [dependencies]
-hsm-core = { path = "../hsm-core" }
-hsm-mock = { path = "../hsm-mock" }
-hsm-pkcs11 = { path = "../hsm-pkcs11" }
+hsm-core = { version = "0.1.0", path = "../hsm-core" }
+hsm-mock = { version = "0.1.0", path = "../hsm-mock" }
+hsm-pkcs11 = { version = "0.1.0", path = "../hsm-pkcs11" }
 
 tokio = { workspace = true }
 tokio-util = { workspace = true }

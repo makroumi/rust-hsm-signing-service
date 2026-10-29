@@ -7,7 +7,7 @@ license.workspace = true
 description = "Pure-Rust in-memory HSM backend for tests and local development"
 
 [dependencies]
-hsm-core = { path = "../hsm-core" }
+hsm-core = { version = "0.1.0", path = "../hsm-core" }
 async-trait.workspace = true
 tokio = { workspace = true, features = ["sync", "rt"] }
 tracing.workspace = true
