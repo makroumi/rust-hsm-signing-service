@@ -47,10 +47,11 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
       - name: Run tests
-        run: cargo test --workspace --all-targets -- --skip softhsm
-      # SoftHSM integration tests require a provisioned PKCS#11 token.
-      # Run locally: cargo test -p hsm-pkcs11 --test softhsm_integration
-      # Full HsmBackend contract coverage is provided by the mock suite.
+        # --lib --tests excludes bench binaries (Criterion does not
+        # accept --skip). Bench compilation is validated in a separate job.
+        # SoftHSM integration tests require a provisioned PKCS#11 token;
+        # run locally with: cargo test -p hsm-pkcs11 --test softhsm_integration
+        run: cargo test --workspace --lib --tests -- --skip softhsm
 
   bench:
     name: Benchmarks (compile)
