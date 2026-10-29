@@ -10,7 +10,7 @@
 //!   live inside the HSM. The API only ever accepts/returns public material,
 //!   handles, or opaque ciphertexts.
 //! * **Backend neutrality**: callers depend on the trait, not on PKCS#11
-//!   specifics. This enables unit testing with [`hsm-mock`] and allows
+//!   specifics. This enables unit testing with `hsm-mock` and allows
 //!   future migration to cloud HSMs.
 //! * **Explicit, typed errors**: [`HsmError`] distinguishes between retryable
 //!   infrastructure failures, authentication problems, and client misuse.
