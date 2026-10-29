@@ -4,7 +4,7 @@
 [![Rust](https://img.shields.io/badge/rust-stable-orange.svg)](https://www.rust-lang.org)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](#license)
 
-> **The signing core for Arkion's NHIG platform** — high-volume, short-lived credentials for non-human identities (AgentID, ArkionID), anchored in hardware roots of trust and built for a post-quantum (ML-DSA / SLH-DSA) future.
+> **The signing core for Arkion's NHIG platform**: high-volume, short-lived credentials for non-human identities (AgentID, ArkionID), anchored in hardware roots of trust and built for a post-quantum (ML-DSA / SLH-DSA) future.
 
 A production-grade Rust service that performs cryptographic signing and
 authenticated encryption through a **PKCS#11-compatible HSM** (SoftHSM2 by
@@ -61,11 +61,11 @@ of that pipeline, and its design follows from NHIG's requirements:
 ## Repository layout
 
 ├── crates/
-│ ├── hsm-core/ # Trait + error/type definitions
-│ ├── hsm-mock/ # In-memory backend (dev/test only)
-│ ├── hsm-pkcs11/ # SoftHSM2/PKCS#11 production backend
-│ ├── signing-service/ # Axum HTTP service (binary)
-│ └── load-test/ # Benchmark harness (binary)
+  ├── hsm-core/ # Trait + error/type definitions
+  ├── hsm-mock/ # In-memory backend (dev/test only)
+  ├── hsm-pkcs11/ # SoftHSM2/PKCS#11 production backend
+  ├── signing-service/ # Axum HTTP service (binary)
+  └── load-test/ # Benchmark harness (binary)
 ├── docker/ # Dockerfile, compose, entrypoint
 ├── scripts/ # SoftHSM init / key provisioning
 └── .github/workflows/ci.yml
